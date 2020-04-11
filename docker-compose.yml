@@ -1,0 +1,52 @@
+version: '3'
+services:
+  aidon-reader:
+    container_name: aidon-reader
+    restart: always
+    build: .
+    devices: 
+      - "/dev/ttyUSB0:/dev/ttyUSB0"
+    networks:
+      - elastic
+    depends_on:
+      - elastic1
+
+  elastic1:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.6.1
+    container_name: elastic1
+    environment:
+      - node.name=eleastic1
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data1:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - elastic
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana-oss:7.6.1
+    container_name: kibana
+    ports:
+      - 5601:5601
+    networks:
+      - elastic
+    environment:
+      - SERVER_NAME=kibana
+      - ELASTICSEARCH_HOSTS=["http://elastic1:9200"]
+    depends_on:
+      - "elastic1"
+
+volumes:
+  data1:
+    driver: local
+
+networks:
+  elastic:
+    driver: bridge
