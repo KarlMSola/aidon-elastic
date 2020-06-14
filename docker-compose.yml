@@ -1,18 +1,7 @@
 version: '3'
 services:
-  aidon-reader:
-    container_name: aidon-reader
-    restart: always
-    build: .
-    devices: 
-      - "/dev/ttyUSB0:/dev/ttyUSB0"
-    networks:
-      - elastic
-    depends_on:
-      - elastic1
-
   elastic1:
-    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.6.1
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.7.1
     container_name: elastic1
     environment:
       - node.name=eleastic1
@@ -31,7 +20,7 @@ services:
       - elastic
 
   kibana:
-    image: docker.elastic.co/kibana/kibana-oss:7.6.1
+    image: docker.elastic.co/kibana/kibana-oss:7.7.1
     container_name: kibana
     ports:
       - 5601:5601
@@ -42,6 +31,17 @@ services:
       - ELASTICSEARCH_HOSTS=["http://elastic1:9200"]
     depends_on:
       - "elastic1"
+
+  aidon-reader:
+    container_name: aidon-reader
+    restart: always
+    build: .
+    devices: 
+      - "/dev/ttyUSB0:/dev/ttyUSB0"
+    networks:
+      - elastic
+    depends_on:
+      - elastic1
 
 volumes:
   data1:
