@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+
 import serial, time, sys, json
 from aidon_obis import *
 from elasticsearch.client.ingest import IngestClient
