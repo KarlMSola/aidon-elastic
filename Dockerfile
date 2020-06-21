@@ -1,8 +1,14 @@
-FROM python:2
+#FROM python:2
+#ADD aidon_elastic.py /
+#ADD aidon_obis.py /
+#RUN pip install elasticsearch crcmod pyserial
+#CMD [ "python", "./aidon_elastic.py", "/dev/ttyUSB0" ]
 
-ADD aidon_elastic.py /
-ADD aidon_obis.py /
+# Container image that runs your code
+FROM alpine:3.10
 
-RUN pip install elasticsearch crcmod pyserial
+# Copies your code file from your action repository to the filesystem path `/` of the container
+COPY entrypoint.sh /entrypoint.sh
 
-CMD [ "python", "./aidon_elastic.py", "/dev/ttyUSB0" ]
+# Code file to execute when the docker container starts up (`entrypoint.sh`)
+ENTRYPOINT ["/entrypoint.sh"]
