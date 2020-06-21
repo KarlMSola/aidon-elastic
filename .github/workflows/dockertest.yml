@@ -1,0 +1,11 @@
+# action.yml
+name: 'Hello Docker'
+description: 'Build the docker image'
+on:
+  push: # enabling push event on branch to fire the workflow
+    branches:
+      - ci
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  
